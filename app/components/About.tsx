@@ -1,4 +1,6 @@
 import { BriefcaseIcon, PhoneCallIcon, TargetIcon } from "./icons";
+import Reveal from "./Reveal";
+import CountUp from "./CountUp";
 
 const HIGHLIGHTS = [
   {
@@ -25,7 +27,7 @@ export default function About() {
   return (
     <section id="about" className="mx-auto max-w-6xl px-6 py-24 sm:px-10">
       <div className="grid gap-12 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
-        <div>
+        <Reveal>
           <p className="section-label">About Me</p>
           <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
             Turning conversations into opportunities.
@@ -42,7 +44,7 @@ export default function About() {
             <div>
               <dt className="section-label">Experience</dt>
               <dd className="mt-2 text-2xl font-semibold text-foreground">
-                4+ Years
+                <CountUp end={4} suffix="+ Years" />
               </dd>
             </div>
             <div>
@@ -52,22 +54,31 @@ export default function About() {
               </dd>
             </div>
           </dl>
-        </div>
+        </Reveal>
 
         <div className="grid gap-5 sm:grid-cols-2">
-          {HIGHLIGHTS.map(({ icon: Icon, title, description }) => (
-            <div
+          {HIGHLIGHTS.map(({ icon: Icon, title, description }, index) => (
+            <Reveal
               key={title}
-              className="rounded-2xl border border-border bg-surface p-6 shadow-sm transition-shadow hover:shadow-md sm:first:col-span-2"
+              delay={index * 120}
+              className="sm:first:col-span-2"
             >
-              <div className="flex size-11 items-center justify-center rounded-xl bg-brand/10 text-brand">
-                <Icon className="size-5" />
+              <div className="group relative overflow-hidden rounded-2xl border border-border bg-surface p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-brand/40 hover:shadow-lg">
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -right-8 -top-8 size-28 rounded-full bg-brand/5 transition-transform duration-500 group-hover:scale-150"
+                />
+                <div className="relative flex size-11 items-center justify-center rounded-xl bg-brand/10 text-brand transition-transform duration-300 group-hover:scale-110">
+                  <Icon className="size-5" />
+                </div>
+                <h3 className="relative mt-4 font-semibold text-foreground">
+                  {title}
+                </h3>
+                <p className="relative mt-2 text-sm leading-relaxed text-muted">
+                  {description}
+                </p>
               </div>
-              <h3 className="mt-4 font-semibold text-foreground">{title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted">
-                {description}
-              </p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>

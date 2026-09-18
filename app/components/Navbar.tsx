@@ -13,6 +13,8 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState("");
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -20,6 +22,40 @@ export default function Navbar() {
       document.body.style.overflow = "";
     };
   }, [open]);
+
+  useEffect(() => {
+    const sections = NAV_LINKS.map((link) =>
+      document.querySelector(link.href)
+    ).filter((el): el is Element => Boolean(el));
+
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActive(`#${entry.target.id}`);
+          }
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    function onScroll() {
+      const { scrollTop, scrollHeight, clientHeight } =
+        document.documentElement;
+      const max = scrollHeight - clientHeight;
+      setProgress(max > 0 ? (scrollTop / max) * 100 : 0);
+    }
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/80 bg-background/85 backdrop-blur-md">
@@ -36,7 +72,11 @@ export default function Navbar() {
             <li key={link.href}>
               <a
                 href={link.href}
-                className="text-sm font-medium text-muted transition-colors hover:text-brand"
+                className={`relative text-sm font-medium transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:bg-brand after:transition-all ${
+                  active === link.href
+                    ? "text-brand after:w-full"
+                    : "text-muted after:w-0 hover:text-brand hover:after:w-full"
+                }`}
               >
                 {link.label}
               </a>
@@ -74,7 +114,11 @@ export default function Navbar() {
                 <a
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className="block rounded-lg px-3 py-3 text-base font-medium text-foreground transition-colors hover:bg-surface-muted hover:text-brand"
+                  className={`block rounded-lg px-3 py-3 text-base font-medium transition-colors ${
+                    active === link.href
+                      ? "bg-surface-muted text-brand"
+                      : "text-foreground hover:bg-surface-muted hover:text-brand"
+                  }`}
                 >
                   {link.label}
                 </a>
@@ -91,6 +135,13 @@ export default function Navbar() {
           </a>
         </div>
       )}
+
+      <div className="h-[2px] w-full bg-transparent">
+        <div
+          className="h-full bg-gradient-to-r from-brand to-brand-light transition-[width] duration-150 ease-out"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
     </header>
   );
 }

@@ -282,6 +282,30 @@ export function InstagramIcon({ className }: IconProps) {
   );
 }
 
+export function ChevronDownIcon({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.75}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
+
+export function SparkleIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M12 2c.4 3.6 1.3 6 3 7.7 1.7 1.7 4.1 2.6 7 3-3.6.4-6 1.3-7.7 3C12.6 17.4 11.7 19.8 11.3 22c-.4-3.6-1.3-6-3-7.7C6.6 12.6 4.2 11.7 2 11.3c3.6-.4 6-1.3 7.7-3C11.4 6.6 12.3 4.2 12 2Z" />
+    </svg>
+  );
+}
+
 export function EarIcon({ className }: IconProps) {
   return (
     <svg
